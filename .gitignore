@@ -1,0 +1,12 @@
+**/.DS_STORE
+npm-debug.log
+.imdone
+build
+coverage
+node_modules
+.env
+server/public/
+tests
+build-files/lib/
+.idea
+diskcache
