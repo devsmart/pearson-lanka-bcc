@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myCalender">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>MyWeather</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="full-width">
+    <header>
+        <h1>Google Calendar - Demo</h1>
+    </header>
+    <div class="outer" ng-controller="homeController">
+        <div class="btns">
+            <!--Add buttons to initiate auth sequence and sign out-->
+            <button id="authorize-button" style="display: none;" ng-click="btnAuthorize_click()">Authorize</button>
+            <button id="signout-button" style="display: none;" ng-click="btnSignOut_click()">Sign Out</button>
+        </div>
+
+        <div class="content-outer">
+            <div ng-repeat="m in data" class="month">
+                <ul class="day-view">
+                    <li class="day-info">
+                        <div class="heading">{{m.name}}</div>
+                    </li>
+                    <li class="card-outer" ng-repeat="c in m.calenders">
+                        {{c.showName}}
+                        <ul class="items">
+                            <li ng-repeat="e in c.events">
+                                <div title="{{e.name}}" class="item" ng-style="e.widthStyle" ng-class="e.extraClass"></div>
+                            </li>
+                        </ul>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+<script src="app.js" type="application/javascript"></script>
+</body>
+</html>

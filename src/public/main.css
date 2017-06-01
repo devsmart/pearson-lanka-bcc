@@ -1,0 +1,59 @@
+.day-view {
+    display: block;
+    padding: 0;
+    /* border-left: 1px solid #000; */
+}
+
+.day-view li {
+    list-style: none;
+    border-left: 1px solid #0080ff;
+}
+
+.month {
+    width: 7.5%;
+    display: inline-block;
+    float: left;
+}
+
+.month:first-child {
+    width: 10%;
+}
+
+.day-info {
+    text-align: center;
+    font-weight: bold;
+}
+
+.items {
+    padding: 0;
+}
+
+.item {
+
+
+    /* border-right: 1px solid #000000; */
+    display: inline-block;
+    float: left;
+    height: 20px;
+}
+
+.left-brdr {
+    border-left: 1px solid #000000;
+}
+
+.items li {
+    /* display: block; */
+    /* width: 100%; */
+    /* float: left; */
+}
+
+.show-item {
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+    border-right: 1px solid #000000;
+    background-color: aqua;
+}
+
+.show-item:first-child{
+
+}
