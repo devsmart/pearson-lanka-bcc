@@ -69,7 +69,7 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
                             end: undefined,
                             location: '',
                             description: '',
-                            widthStyle: {'width': '2px'}
+                            widthStyle: {'width': '10%'}
                         });
 
                 } else {
