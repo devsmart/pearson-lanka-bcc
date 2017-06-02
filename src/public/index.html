@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>MyWeather</title>
+    <title>Google Calendar - Demo</title>
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -25,21 +25,21 @@
     <div class="outer" ng-controller="homeController">
         <div class="btns">
             <!--Add buttons to initiate auth sequence and sign out-->
-            <button id="authorize-button" style="display: none;" ng-click="btnAuthorize_click()">Authorize</button>
-            <button id="signout-button" style="display: none;" ng-click="btnSignOut_click()">Sign Out</button>
+            <button id="authorize-button" class="btn btn-primary" style="display: none;" ng-click="btnAuthorize_click()">Authorize</button>
+            <button id="signout-button" class="btn btn-primary" style="display: none;" ng-click="btnSignOut_click()">Sign Out</button>
         </div>
 
         <div class="content-outer">
             <div ng-repeat="m in data" class="month">
                 <ul class="day-view">
                     <li class="day-info">
-                        <div class="heading">{{m.name}}</div>
+                        <div class="heading" >{{m.name}}</div>
                     </li>
                     <li class="card-outer" ng-repeat="c in m.calenders">
                         {{c.showName}}
                         <ul class="items">
                             <li ng-repeat="e in c.events">
-                                <div title="{{e.name}}" class="item" ng-style="e.widthStyle" ng-class="e.extraClass"></div>
+                                <div title="{{e.name}}" class="item" ng-style="e.widthStyle" ng-class="[e.extraClass, e.colorId]" ng-click="calenderItem_click($event,c, e)" ></div>
                             </li>
                         </ul>
 
@@ -55,6 +55,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.12/angular-strap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.12/angular-strap.tpl.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script async defer src="https://apis.google.com/js/api.js"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">

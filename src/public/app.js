@@ -3,9 +3,9 @@
  */
 
 
-var weatherApp = angular.module('myCalender', []);
+var weatherApp = angular.module('myCalender', ['mgcrea.ngStrap']);
 
-weatherApp.controller('homeController', function ($scope, $timeout, $q) {
+weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover) {
         $scope.MonthNames = ['*', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.data = [];
 
@@ -78,16 +78,37 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
                         var extraClasses = 'show-item';
                         if (j == 0)
                             extraClasses = 'left-brdr show-item';
+                        var startDt = undefined;
+                        if (event.start.hasOwnProperty('dateTime')) {
+                            startDt = new Date(event.start.dateTime);
+                        } else {
+                            startDt = new Date(event.start.date);
+                        }
+
+                        var endDt = undefined;
+                        if (event.end.hasOwnProperty('dateTime')) {
+                            endDt = new Date(event.end.dateTime);
+                        } else {
+                            endDt = new Date(event.end.date);
+                        }
+                        var colorId = 'color-default';
+                        if (event.hasOwnProperty('colorId')) {
+                            colorId = 'color-' + event.colorId;
+                        }
                         events.push(
                             {
                                 name: event.summary,
                                 attendees: event.attendees,
-                                start: event.start,
-                                end: event.end,
+                                start: startDt,
+                                end: endDt,
                                 location: event.location,
                                 description: event['description'],
-                                widthStyle: {'width': (100 / (monthEvents.length )) - 1 + '%'},
-                                extraClass: extraClasses
+                                widthStyle: {'width': (100 / (monthEvents.length )) - 6 + '%'},
+                                extraClass: extraClasses,
+                                colorId: colorId,
+                                id: event.id
+
+
                             });
                     }
                 }
@@ -117,6 +138,7 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
                                     monthData.calenders.push({name: 'Calender 2', events: [], showName: 'Calender 2'});
 
                                 } else {
+                                    console.log(first);
                                     var events = populateDateForCal(first, i);
                                     monthData.calenders.push({name: 'Calender 1', events: events});
 
@@ -137,7 +159,6 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
          *  Called when the signed in status changes, to update the UI
          *  appropriately. After a sign-in, the API is called.
          */
-
         $scope.updateSigninStatus = function (isSignedIn) {
             if (isSignedIn) {
                 authorizeButton.style.display = 'none';
@@ -168,11 +189,10 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
             });
         };
 
-
+        /**
+         *  On load, called to load the auth2 library and API client library.
+         */
         $scope.init = function () {
-            /**
-             *  On load, called to load the auth2 library and API client library.
-             */
             var countUp = function () {
                 if (typeof gapi !== 'undefined') {
                     gapi.load('client:auth2', $scope.initClient);
@@ -196,7 +216,72 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
         $scope.btnSignOut_click = function () {
             gapi.auth2.getAuthInstance().signOut();
         };
+        $scope.myPopover = {};
 
+        $scope.calenderItem_click = function ($event, calender, event) {
+
+            console.log(calender);
+            console.log(event);
+            if (calender.events.length > 3) {
+                if (!$scope.myPopover['_MY_' + calender.$$hashKey + event.id]) {
+                    calender.itemClickHandler = function ($event, event) {
+                        if (!$scope.myPopover[calender.$$hashKey + event.id]) {
+                            var myPopover = $popover(
+                                angular.element($event.currentTarget),
+                                {
+                                    trigger: 'click',
+                                    autoClose: true,
+                                    placement: 'bottom',
+                                    content: event,
+                                    templateUrl: 'popover.html'
+                                }
+                            );
+                            $scope.myPopover[calender.$$hashKey + event.id] = myPopover;
+                            $timeout(function () {
+                                $event.target.click();
+                            }, 500);
+                        }
+                    };
+                    var myPopover = $popover(
+                        angular.element($event.currentTarget),
+                        {
+                            trigger: 'click',
+                            autoClose: true,
+                            placement: 'bottom',
+                            content: calender,
+                            templateUrl: 'popover-a.html'
+                        }
+                    );
+                    $scope.myPopover['_MY_' + calender.$$hashKey + event.id] = myPopover;
+                    $timeout(function () {
+                        $event.target.click();
+                    }, 500);
+                }
+            } else {
+                if (!$scope.myPopover[calender.$$hashKey + event.id]) {
+                    var myPopover = $popover(
+                        angular.element($event.currentTarget),
+                        {
+                            trigger: 'click',
+                            autoClose: true,
+                            placement: 'bottom',
+                            content: event,
+                            templateUrl: 'popover.html'
+                        }
+                    );
+                    $scope.myPopover[calender.$$hashKey + event.id] = myPopover;
+                    $timeout(function () {
+                        $event.target.click();
+                    }, 500);
+                    /* $scope.myPopover[event.id].$promise.then(function () {
+                     $scope.myPopover[event.id].toggle($event);
+                     }
+                     );*/
+                }
+
+            }
+
+        };
 
         $scope.init();
 
@@ -204,35 +289,3 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q) {
 )
 ;
 
-
-/**
- * Print the summary and start datetime/date of the next ten events in
- * the authorized user's calendar. If no events are found an
- * appropriate message is printed.
- */
-function listUpcomingEvents() {
-    gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-    }).then(function (response) {
-        var events = response.result.items;
-        appendPre('Upcoming events:');
-
-        if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-                var event = events[i];
-                var when = event.start.dateTime;
-                if (!when) {
-                    when = event.start.date;
-                }
-                appendPre(event.summary + ' (' + when + ')')
-            }
-        } else {
-            appendPre('No upcoming events found.');
-        }
-    });
-}

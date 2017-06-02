@@ -1,0 +1,22 @@
+<div class="popover" tabindex="-1" ng-show="content">
+    <div class="arrow"></div>
+    <h3 class="popover-title" ng-bind-html="title" ng-show="title"></h3>
+
+    <div class="popover-content">
+        <form name="popoverForm">
+            <div class="popover-cal">
+                <ul>
+                    <li ng-repeat="e in content.events">
+                        <div class="event-item">
+                            <div class="name">{{e.name}}</div>
+                            <div class="btns"><button class="btn btn-success" ng-click="content.itemClickHandler($event,e)">Show</button></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-info" ng-click="$hide()">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
