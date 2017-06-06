@@ -3,10 +3,10 @@
  */
 
 
-var weatherApp = angular.module('myCalender', ['mgcrea.ngStrap']);
+var myCalender = angular.module('myCalender', ['mgcrea.ngStrap']);
 
-weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover) {
-        $scope.MonthNames = ['*', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+myCalender.controller('homeController', function ($scope, $timeout, $q, $popover) {
+        $scope.MonthNames = ['Dept.', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.data = [];
 
 
@@ -35,8 +35,8 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
                     'maxResults': 999999,
                     'orderBy': 'startTime'
                 }).then(function (response) {
-                    var events = response.result.items;
-                    resolve(events);
+                    //var events = response.result.items;
+                    resolve(response.result);
 
                 });
             });
@@ -122,6 +122,62 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
 
 
         function populateData() {
+
+            var calIds = [
+                'pearson.com_0jlo9lghjersvsfs1dqe6r9j3c@group.calendar.google.com',
+                'pearson.com_1ph0u04hfumpa10i2nimqv0a14@group.calendar.google.com'
+            ];
+
+            var apiData = [];
+
+            for (var i = 0; i < calIds.length; i++) {
+
+                getEventsForCalender(calIds[i]).then(
+                    function (data) {
+                        apiData.push(data);
+                    }
+                )
+            }
+
+            var fillData = function () {
+                if (calIds.length === apiData.length) {
+                    for (var i = 0; i < 13; i++) {
+                        var monthData = {
+                            name: $scope.MonthNames[i],
+                            no: i,
+                            calenders: []
+                        };
+                        for (var j = 0; j < apiData.length; j++) {
+                            var api = apiData[j];
+                            if (i === 0) {
+                                monthData.calenders.push({
+                                    name: api.summary,
+                                    events: [],
+                                    showName: api.summary,
+                                    title: api.description,
+                                    id: api.etag
+                                });
+
+                            } else {
+
+                                var events = populateDateForCal(api.items, i);
+                                monthData.calenders.push({
+                                    name: api.summary,
+                                    events: events,
+                                    id: api.etag + '-' + i
+                                });
+                            }
+                        }
+
+                        $scope.data.push(monthData)
+                    }
+                } else {
+                    console.log('fildata waiting 600');
+                    $timeout(fillData, 600);
+                }
+            };
+            fillData();
+            return;
             getEventsForCalender('pearson.com_0jlo9lghjersvsfs1dqe6r9j3c@group.calendar.google.com')
                 .then(function (first) {
 
@@ -134,16 +190,34 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
                                     calenders: []
                                 };
                                 if (i === 0) {
-                                    monthData.calenders.push({name: 'Calender 1', events: [], showName: 'Calender 1'});
-                                    monthData.calenders.push({name: 'Calender 2', events: [], showName: 'Calender 2'});
+                                    monthData.calenders.push({
+                                        name: 'Calender 1',
+                                        events: [],
+                                        showName: 'Calender 1',
+                                        id: first.etag
+                                    });
+                                    monthData.calenders.push({
+                                        name: 'Calender 2',
+                                        events: [],
+                                        showName: 'Calender 2',
+                                        id: secound.etag
+                                    });
 
                                 } else {
                                     console.log(first);
-                                    var events = populateDateForCal(first, i);
-                                    monthData.calenders.push({name: 'Calender 1', events: events});
+                                    var events = populateDateForCal(first.items, i);
+                                    monthData.calenders.push({
+                                        name: 'Calender 1',
+                                        events: events,
+                                        id: first.etag + '-' + i
+                                    });
 
-                                    events = populateDateForCal(secound, i);
-                                    monthData.calenders.push({name: 'Calender 2', events: events});
+                                    events = populateDateForCal(secound.items, i);
+                                    monthData.calenders.push({
+                                        name: 'Calender 2',
+                                        events: events,
+                                        id: secound.etag + '-' + i
+                                    });
 
                                 }
                                 $scope.data.push(monthData)
@@ -223,27 +297,12 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
             console.log(calender);
             console.log(event);
             if (calender.events.length > 3) {
-                if (!$scope.myPopover['_MY_' + calender.$$hashKey + event.id]) {
-                    calender.itemClickHandler = function ($event, event) {
-                        if (!$scope.myPopover[calender.$$hashKey + event.id]) {
-                            var myPopover = $popover(
-                                angular.element($event.currentTarget),
-                                {
-                                    trigger: 'click',
-                                    autoClose: true,
-                                    placement: 'bottom',
-                                    content: event,
-                                    templateUrl: 'popover.html'
-                                }
-                            );
-                            $scope.myPopover[calender.$$hashKey + event.id] = myPopover;
-                            $timeout(function () {
-                                $event.target.click();
-                            }, 500);
-                        }
-                    };
+                var p = angular.element($event.currentTarget.parentNode.parentNode);
+
+                if (!$scope.myPopover['_G_' + p.attr('id')]) {
+
                     var myPopover = $popover(
-                        angular.element($event.currentTarget),
+                        angular.element(p),
                         {
                             trigger: 'click',
                             autoClose: true,
@@ -252,7 +311,7 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
                             templateUrl: 'popover-a.html'
                         }
                     );
-                    $scope.myPopover['_MY_' + calender.$$hashKey + event.id] = myPopover;
+                    $scope.myPopover['_G_' + p.attr('id')] = myPopover;
                     $timeout(function () {
                         $event.target.click();
                     }, 500);
@@ -273,10 +332,6 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
                     $timeout(function () {
                         $event.target.click();
                     }, 500);
-                    /* $scope.myPopover[event.id].$promise.then(function () {
-                     $scope.myPopover[event.id].toggle($event);
-                     }
-                     );*/
                 }
 
             }
@@ -289,3 +344,45 @@ weatherApp.controller('homeController', function ($scope, $timeout, $q, $popover
 )
 ;
 
+myCalender.directive('moreButton', function () {
+    return {
+        restrict: 'E',
+        scope: {
+            evnt: '='
+        },
+        controller: function ($scope, $popover, $timeout, $rootScope) {
+
+            $scope.btnId = 'btn_' + Math.random().toString().replace('.', '_');
+
+            $scope.togglePopover = function ($event) {
+                $rootScope.$broadcast('ItemClicked');
+                if ($scope.myPopover) {
+
+                } else {
+                    $scope.myPopover = $popover(
+                        angular.element('#' + $scope.btnId),
+                        {
+                            trigger: 'click',
+                            autoClose: true,
+                            placement: 'bottom',
+                            content: $scope.evnt,
+                            templateUrl: 'popover.html'
+                        }
+                    );
+                    $timeout(function () {
+                        $event.target.click();
+                    }, 500);
+                }
+            };
+            $scope.$on('ItemClicked', function (event) {
+                if ($scope.myPopover) {
+                    $scope.myPopover.hide();
+                }
+            });
+            $scope.init = function () {
+
+            };
+        },
+        template: ' <button id="{{btnId}}" class="btn btn-success" ng-click="togglePopover($event)">Show</button>'
+    }
+});

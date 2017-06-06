@@ -3,12 +3,13 @@
     <h3 class="popover-title" ng-bind-html="title" ng-show="title"></h3>
 
     <div class="popover-content">
+
         <form name="popoverForm">
             <div class="popover-event">
                 <ul>
-                    <li ng-if="content.name"><strong>Name : </strong> {{content.name}}</li>
-                    <li ng-if="content.location"><strong>Location : </strong> <span class="glyphicon glyphicon-object-align-bottom" aria-hidden="true"></span> {{content.location}}</li>
-                    <li ng-if="content.description"><strong>Description : </strong> {{content.description}}</li>
+                    <li ng-if="content.name" title="{{content.name}}"><strong>Name : </strong> {{content.name}}</li>
+                    <li ng-if="content.location" title="{{content.location}}"><strong>Location : </strong> <span class="glyphicon glyphicon-object-align-bottom" aria-hidden="true"></span> {{content.location}}</li>
+                    <li ng-if="content.description" title="{{content.description}}"><strong>Description : </strong> {{content.description}}</li>
                     <li ng-if="content.start"><strong>Start : </strong> {{content.start | date : "medium"}}</li>
                     <li ng-if="content.end"><strong>End : </strong> {{content.end | date : "medium"}}</li>
                     <li ng-if="content.attendees"><strong>attendees : </strong>

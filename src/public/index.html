@@ -23,29 +23,40 @@
         <h1>Google Calendar - Demo</h1>
     </header>
     <div class="outer" ng-controller="homeController">
-        <div class="btns">
+        <div class="myButtons">
             <!--Add buttons to initiate auth sequence and sign out-->
-            <button id="authorize-button" class="btn btn-primary" style="display: none;" ng-click="btnAuthorize_click()">Authorize</button>
-            <button id="signout-button" class="btn btn-primary" style="display: none;" ng-click="btnSignOut_click()">Sign Out</button>
+            <div class="in">
+                <button id="authorize-button" class="btn btn-primary login" style="display: none;"
+                        ng-click="btnAuthorize_click()">Authorize
+                </button>
+            </div>
+            <div class="out">
+                <button id="signout-button" class="btn btn-primary logout" style="display: none;"
+                        ng-click="btnSignOut_click()">Sign Out
+                </button>
+            </div>
+            <div class="clearfix"></div>
         </div>
 
         <div class="content-outer">
             <div ng-repeat="m in data" class="month">
-                <ul class="day-view">
+                <ul class="day-view d-{{m.no}}">
                     <li class="day-info">
-                        <div class="heading" >{{m.name}}</div>
+                        <div class="heading">{{m.name}}</div>
                     </li>
                     <li class="card-outer" ng-repeat="c in m.calenders">
-                        {{c.showName}}
-                        <ul class="items">
-                            <li ng-repeat="e in c.events">
-                                <div title="{{e.name}}" class="item" ng-style="e.widthStyle" ng-class="[e.extraClass, e.colorId]" ng-click="calenderItem_click($event,c, e)" ></div>
+                        <div ng-if="c.showName" title="{{c.title}}">{{c.showName}}</div>
+                        <ul class="items" id="{{c.id}}">
+                            <li class="sameline" ng-repeat="e in c.events" ng-style="e.widthStyle">
+                                <div title="{{e.name}}" class="item" ng-class="[e.extraClass, e.colorId]"
+                                     ng-click="calenderItem_click($event,c, e)"></div>
                             </li>
                         </ul>
 
                     </li>
                 </ul>
             </div>
+            <div class="clearfix"></div>
         </div>
     </div>
 
@@ -55,7 +66,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.12/angular-strap.js"></script>
+<script src="angular-strap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.12/angular-strap.tpl.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script async defer src="https://apis.google.com/js/api.js"

@@ -1,12 +1,37 @@
+body {
+    background-color: #E4E5D3;
+}
+.content-outer {
+    margin:20px
+}
+
+.content-outer >:first-child{
+    /* background-color:#e8e8e8; */
+}
 .day-view {
     display: block;
     padding: 0;
     /* border-left: 1px solid #000; */
+    margin-bottom: 0;
+}
+.card-outer{
+    min-height: 32px;
+    border-right: 1px solid #C5C6AE;
+    border-bottom: 1px solid #C5C6AE;
+    padding-top: 4px;
+}
+.d0 .card-outer{
+    border-left: 1px solid #C5C6AE;
+}
+
+.day-view.d-0 .card-outer{
+    padding-left:10px;
+    border-left: 1px solid #C5C6AE;
 }
 
 .day-view li {
     list-style: none;
-    border-left: 1px solid #0080ff;
+    /*  */
 }
 
 .month {
@@ -22,18 +47,39 @@
 .day-info {
     text-align: center;
     font-weight: bold;
+    /* border-bottom: 1px solid #dfe2e4; */
+    /* border-top: 1px solid #dfe2e4; */
+    border-right: 1px solid #dfe2e4;
+    background-color: #C5C6AE;
+    color: #565656;
+}
+
+.d-0 .day-info{
+    border-left: 1px solid #C5C6AE;
 }
 
 .items {
     padding: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 
 .item {
 
     /* border-right: 1px solid #000000; */
+
     display: inline-block;
-    float: left;
+
+    /* float: left; */
+
     height: 20px;
+
+    width: 100%;
+}
+
+.sameline {
+    margin:1px
 }
 
 .left-brdr {
@@ -41,14 +87,14 @@
 }
 
 .items li {
-    /* display: block; */
-    /* width: 100%; */
+    display: inline-block;
+    width: auto;
     /* float: left; */
+    /* height: 20px; */
 }
 
 .show-item {
     border: 1px solid #9E9E9E;
-    margin: 1px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -65,12 +111,15 @@
 .popover-content ul li {
     border-left: none;
     min-width: 220px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .form-actions {
     text-align: right;
     padding: 5px;
-    border-top: 1px solid #444;
+    border-top: 1px solid #C5C6AE;
     width: 100%;
     margin-top: 10px;
 }
@@ -87,7 +136,7 @@
 }
 
 .popover li:nth-child(odd) {
-    background-color: #f3ecec
+    background-color: #E3E4D2;
 }
 
 .popover li:nth-child(even) {
@@ -123,6 +172,7 @@
 
 .popover-content {
     padding: 0px 0px;
+    background-color: #F0F1DE;
 }
 
 .popover-event li {
@@ -131,7 +181,7 @@
 
 .color-default,
 .color-1 {
-    background-color: #a4bdfc;
+    background-color: #28ABBB;
 }
 
 .color-2 {
@@ -143,11 +193,11 @@
 }
 
 .color-4 {
-    background-color: #ff887c;
+    background-color: #E7652F;
 }
 
 .color-5 {
-    background-color: #fbd75b;
+    background-color: #F0C111;
 }
 
 .color-6 {
@@ -167,9 +217,33 @@
 }
 
 .color-10 {
-    background-color: #51b749;
+    background-color: #2FCA71;
 }
 
 .color-11 {
     background-color: #dc2127;
+}
+
+.popover{
+    border-radius:0;
+    border: 1px solid #C5C6AE;
+}
+
+
+
+.myButtons .in {
+    text-align:center;
+    padding: 20px 40% 0;
+}
+
+
+.myButtons .out{
+    text-align:center;
+    padding: 0 25px;
+    float:right;
+
+}
+
+.popover-event li{
+    width:100%
 }

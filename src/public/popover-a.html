@@ -9,7 +9,10 @@
                     <li ng-repeat="e in content.events">
                         <div class="event-item">
                             <div class="name">{{e.name}}</div>
-                            <div class="btns"><button class="btn btn-success" ng-click="content.itemClickHandler($event,e)">Show</button></div>
+                            <div class="btns">
+                                  <more-button evnt="e" ng-init="init()"></more-button>
+                            </div>
+                            <!--ng-click="content.itemClickHandler($event,e)"-->
                         </div>
                     </li>
                 </ul>
