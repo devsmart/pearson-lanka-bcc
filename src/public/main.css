@@ -247,3 +247,10 @@ body {
 .popover-event li{
     width:100%
 }
+
+
+.links .link{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

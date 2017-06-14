@@ -95,6 +95,10 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                         if (event.hasOwnProperty('colorId')) {
                             colorId = 'color-' + event.colorId;
                         }
+                        var att = undefined;
+                        if (event.hasOwnProperty('attachments')) {
+                            att = event.attachments;
+                        }
                         events.push(
                             {
                                 name: event.summary,
@@ -106,8 +110,8 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                                 widthStyle: {'width': (100 / (monthEvents.length )) - 6 + '%'},
                                 extraClass: extraClasses,
                                 colorId: colorId,
-                                id: event.id
-
+                                id: event.id,
+                                attachments: att
 
                             });
                     }
@@ -124,8 +128,9 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
         function populateData() {
 
             var calIds = [
-                'pearson.com_0jlo9lghjersvsfs1dqe6r9j3c@group.calendar.google.com',
-                'pearson.com_1ph0u04hfumpa10i2nimqv0a14@group.calendar.google.com'
+                'pearson.com_gvkila91d7vgf3pnthuh5dn058@group.calendar.google.com',
+                'pearson.com_bbgfdvvqfrunt79b2c4cgh0lt8@group.calendar.google.com',
+				'pearson.com_tgvprfn8e0aakbautlu6h6ra90@group.calendar.google.com'
             ];
 
             var apiData = [];
@@ -177,55 +182,6 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                 }
             };
             fillData();
-            return;
-            getEventsForCalender('pearson.com_0jlo9lghjersvsfs1dqe6r9j3c@group.calendar.google.com')
-                .then(function (first) {
-
-                    getEventsForCalender('pearson.com_1ph0u04hfumpa10i2nimqv0a14@group.calendar.google.com')
-                        .then(function (secound) {
-                            for (var i = 0; i < 13; i++) {
-                                var monthData = {
-                                    name: $scope.MonthNames[i],
-                                    no: i,
-                                    calenders: []
-                                };
-                                if (i === 0) {
-                                    monthData.calenders.push({
-                                        name: 'Calender 1',
-                                        events: [],
-                                        showName: 'Calender 1',
-                                        id: first.etag
-                                    });
-                                    monthData.calenders.push({
-                                        name: 'Calender 2',
-                                        events: [],
-                                        showName: 'Calender 2',
-                                        id: secound.etag
-                                    });
-
-                                } else {
-                                    console.log(first);
-                                    var events = populateDateForCal(first.items, i);
-                                    monthData.calenders.push({
-                                        name: 'Calender 1',
-                                        events: events,
-                                        id: first.etag + '-' + i
-                                    });
-
-                                    events = populateDateForCal(secound.items, i);
-                                    monthData.calenders.push({
-                                        name: 'Calender 2',
-                                        events: events,
-                                        id: secound.etag + '-' + i
-                                    });
-
-                                }
-                                $scope.data.push(monthData)
-                            }
-                            console.log($scope.data);
-                        });
-                });
-
         }
 
 
