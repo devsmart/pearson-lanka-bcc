@@ -25,9 +25,11 @@
                             </div>
                         </div>
                     </li>
-                    <li ng-if="content.attendees"><strong>attendees : </strong>
-                        <span ng-repeat="a in content.attendees"><span class="glyphicon glyphicon glyphicon-user"
-                                                                       aria-hidden="true"></span> {{a.displayName}}</span>
+                    <li ng-if="content.attendees" title="{{content.attendeesList}}"><strong>attendees : </strong>
+                        <span ng-repeat="a in content.attendees">
+                            <span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>
+                            <span >{{a.displayName || a.email}}</span>
+                            </span>
                     </li>
                 </ul>
             </div>

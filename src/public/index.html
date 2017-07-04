@@ -18,11 +18,28 @@
     <![endif]-->
 </head>
 <body>
-<div class="full-width">
+<div class="full-width" ng-controller="homeController">
     <header>
-        <h1>Pearson Lanka Business Controls Calendar</h1>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img src="img/logo.png" class="logo"> <span>Pearson Lanka Business Controls Calendar</span></a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-show="showContent"><a href="#" ng-click="btnSignOut_click()"><span>Sign Out </span><i class="fa fa-power-off fa-icon" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
     </header>
-    <div class="outer" ng-controller="homeController">
+    <div class="outer" >
         <div class="myButtons">
             <!--Add buttons to initiate auth sequence and sign out-->
             <div class="in">
@@ -30,15 +47,10 @@
                         ng-click="btnAuthorize_click()">Authorize
                 </button>
             </div>
-            <div class="out">
-                <button id="signout-button" class="btn btn-primary logout" style="display: none;"
-                        ng-click="btnSignOut_click()">Sign Out
-                </button>
-            </div>
             <div class="clearfix"></div>
         </div>
 
-        <div class="content-outer">
+        <div class="content-outer" ng-show="showContent">
             <div ng-repeat="m in data" class="month">
                 <ul class="day-view d-{{m.no}}">
                     <li class="day-info">
@@ -53,7 +65,13 @@
                             </li>
                             <li class="sameline more-than-four" ng-if="c.events.length > 4">
                                 <div title="click to see more events" class="item show-item"
-                                     ng-click="calenderItem_click($event,c, null)"></div>
+                                     ng-click="calenderItem_click($event,c, null)">
+                                    <div class="inner-item"></div>
+                                    <div class="inner-item"></div>
+                                    <div class="inner-item"></div>
+                                    <div class="inner-item"></div>
+                                    <div class="inner-item"></div>
+                                </div>
                             </li>
                         </ul>
 

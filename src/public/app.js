@@ -8,7 +8,7 @@ var myCalender = angular.module('myCalender', ['mgcrea.ngStrap']);
 myCalender.controller('homeController', function ($scope, $timeout, $q, $popover) {
         $scope.MonthNames = ['Dept.', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.data = [];
-
+        $scope.showContent = false;
 
         // Client ID and API key from the Developer Console
         var CLIENT_ID = '502581757627-t6g279js6onoiaarmqqq3mfhl5ndi9mi.apps.googleusercontent.com';
@@ -126,7 +126,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
 
         function populateData() {
-
+            $scope.data = [];
             var calIds = [
                 'pearson.com_gvkila91d7vgf3pnthuh5dn058@group.calendar.google.com',
                 'pearson.com_bbgfdvvqfrunt79b2c4cgh0lt8@group.calendar.google.com',
@@ -150,6 +150,17 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
             }
 
             var fillData = function () {
+
+                apiData = apiData.sort(function (a, b) {
+                    if (a.summary.toLowerCase() < b.summary.toLowerCase()) {
+                        return -1;
+                    }
+                    else if (a.summary.toLowerCase() > b.summary.toLowerCase()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
                 if (calIds.length === apiData.length) {
                     for (var i = 0; i < 13; i++) {
                         var monthData = {
@@ -181,6 +192,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
                         $scope.data.push(monthData)
                     }
+                    $scope.showContent = true;
                 } else {
                     console.log('fildata waiting 600');
                     $timeout(fillData, 600);
@@ -197,11 +209,11 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
         $scope.updateSigninStatus = function (isSignedIn) {
             if (isSignedIn) {
                 authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
+                //  signoutButton.style.display = 'block';
                 populateData();
             } else {
                 authorizeButton.style.display = 'block';
-                signoutButton.style.display = 'none';
+                //signoutButton.style.display = 'none';
             }
         };
 
@@ -250,6 +262,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
          */
         $scope.btnSignOut_click = function () {
             gapi.auth2.getAuthInstance().signOut();
+            $scope.showContent = false;
         };
         $scope.myPopover = {};
 
@@ -279,6 +292,11 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                 }
             } else {
                 if (!$scope.myPopover[calender.$$hashKey + event.id]) {
+                    if (event.attendees && event.attendees.length > 0) {
+                        event.attendeesList = event.attendees.map(function (val) {
+                            return val.displayName || val.email;
+                        }).join(', ');
+                    }
                     var myPopover = $popover(
                         angular.element($event.currentTarget),
                         {
@@ -320,6 +338,11 @@ myCalender.directive('moreButton', function () {
                 if ($scope.myPopover) {
 
                 } else {
+                    if ($scope.evnt.attendees && $scope.evnt.attendees.length > 0) {
+                        $scope.evnt.attendeesList = $scope.evnt.attendees.map(function (val) {
+                            return val.displayName || val.email;
+                        }).join(', ');
+                    }
                     $scope.myPopover = $popover(
                         angular.element('#' + $scope.btnId),
                         {

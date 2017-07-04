@@ -8,7 +8,7 @@
                 <ul>
                     <li ng-repeat="e in content.events">
                         <div class="event-item">
-                            <div class="name">{{e.name}}</div>
+                            <div class="name" title="{{e.name}}">{{e.name}}</div>
                             <div class="btns">
                                   <more-button evnt="e" ng-init="init()"></more-button>
                             </div>
