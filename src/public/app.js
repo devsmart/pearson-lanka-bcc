@@ -130,7 +130,12 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
             var calIds = [
                 'pearson.com_gvkila91d7vgf3pnthuh5dn058@group.calendar.google.com',
                 'pearson.com_bbgfdvvqfrunt79b2c4cgh0lt8@group.calendar.google.com',
-				'pearson.com_tgvprfn8e0aakbautlu6h6ra90@group.calendar.google.com'
+                'pearson.com_tgvprfn8e0aakbautlu6h6ra90@group.calendar.google.com',
+                'pearson.com_b6jl3fraislnke3tfb969ru7ts@group.calendar.google.com',
+                'pearson.com_coo567atdfiskutr7iipul84kk@group.calendar.google.com',
+                'pearson.com_sten15kc2iqfkithdpojcq104c@group.calendar.google.com',
+                'pearson.com_3polpfv3rqttj2tbcqo80km5eg@group.calendar.google.com',
+                'pearson.com_h2mll5g9ndpt6qebq8cp5lj0d8@group.calendar.google.com'
             ];
 
             var apiData = [];
@@ -252,7 +257,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
             console.log(calender);
             console.log(event);
-            if (calender.events.length > 3) {
+            if (event === null) {
                 var p = angular.element($event.currentTarget.parentNode.parentNode);
 
                 if (!$scope.myPopover['_G_' + p.attr('id')]) {

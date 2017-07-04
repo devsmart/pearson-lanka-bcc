@@ -15,7 +15,7 @@ body {
     margin-bottom: 0;
 }
 .card-outer{
-    min-height: 32px;
+    min-height: 45px;
     border-right: 1px solid #C5C6AE;
     border-bottom: 1px solid #C5C6AE;
     padding-top: 4px;
@@ -79,7 +79,7 @@ body {
 }
 
 .sameline {
-    margin:1px
+    margin: 7px 1px 1px 1px;
 }
 
 .left-brdr {
@@ -98,6 +98,20 @@ body {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+.more-than-four{
+    width: 96% !important;
+    height: 20px !important;
+    display: block !important;
+    float: none !important;
+}
+.more-than-four div{
+    background-color:#007FA9;
+    width:99%;
+    height:100%;
+    display: block;
+    float: left;
 }
 
 .show-item:first-child {
@@ -173,6 +187,10 @@ body {
 .popover-content {
     padding: 0px 0px;
     background-color: #F0F1DE;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .popover-event li {

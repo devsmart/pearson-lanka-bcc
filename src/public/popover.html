@@ -17,11 +17,12 @@
                     </li>
                     <li ng-if="content.start"><strong>Start : </strong> {{content.start | date : "medium"}}</li>
                     <li ng-if="content.end"><strong>End : </strong> {{content.end | date : "medium"}}</li>
-                    <li ng-ig="content.attachments">
+                    <li ng-if="content.attachments.length > 0">
                         <div class="links">
                             <div><strong>Links</strong></div>
-                            <div class="link" ng-repeat="a in content.attachments"><img src="{{a.iconLink}}"/> <a
-                                    href="{{a.fileUrl}}" target="_blank">{{a.title}}</a></div>
+                            <div class="link" ng-repeat="a in content.attachments">
+                                <img ng-src="{{a.iconLink}}"/> <a href="{{a.fileUrl}}" target="_blank">{{a.title}}</a>
+                            </div>
                         </div>
                     </li>
                     <li ng-if="content.attendees"><strong>attendees : </strong>
