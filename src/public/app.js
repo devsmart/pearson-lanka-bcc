@@ -136,7 +136,8 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                 'pearson.com_sten15kc2iqfkithdpojcq104c@group.calendar.google.com',
                 'pearson.com_3polpfv3rqttj2tbcqo80km5eg@group.calendar.google.com',
                 'pearson.com_h2mll5g9ndpt6qebq8cp5lj0d8@group.calendar.google.com',
-                'pearson.com_pplpntouk3nqp7mn2hhjaohla0@group.calendar.google.com'
+                'pearson.com_pplpntouk3nqp7mn2hhjaohla0@group.calendar.google.com',
+				'pearson.com_h32e69c9mhc6d0m2u35pelpmu0@group.calendar.google.com'
             ];
 
             var apiData = [];
