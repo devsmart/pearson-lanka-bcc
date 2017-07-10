@@ -19,17 +19,23 @@
                     <li ng-if="content.end"><strong>End : </strong> {{content.end | date : "medium"}}</li>
                     <li ng-if="content.attachments.length > 0">
                         <div class="links">
-                            <div><strong>Links</strong></div>
-                            <div class="link" ng-repeat="a in content.attachments">
-                                <img ng-src="{{a.iconLink}}"/> <a href="{{a.fileUrl}}" target="_blank">{{a.title}}</a>
+                            <div class="a-head"><strong>Links</strong></div>
+                            <div class="a-outer">
+                                <div class="link a-item" ng-repeat="a in content.attachments">
+                                    <img ng-src="{{a.iconLink}}"/> <a href="{{a.fileUrl}}"
+                                                                      target="_blank">{{a.title}}</a>
+                                </div>
                             </div>
                         </div>
                     </li>
-                    <li ng-if="content.attendees" title="{{content.attendeesList}}"><strong>attendees : </strong>
-                        <span ng-repeat="a in content.attendees">
-                            <span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>
-                            <span >{{a.displayName || a.email}}</span>
-                            </span>
+                    <li ng-if="content.attendees" title="{{content.attendeesList}}" class="attendees">
+                        <div class="a-head"><strong>Attendees : </strong></div>
+                        <div class="a-outer">
+                            <div class="a-item" ng-repeat="a in content.attendees">
+                                <span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span>{{a.displayName || a.email}}</span>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>

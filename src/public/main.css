@@ -254,6 +254,17 @@ header nav .container-fluid{
     text-overflow: ellipsis;
 }
 
+.popover-content .a-outer{
+    overflow-y: auto;
+    max-height: 50px;
+    /* float: left; */
+    overflow-x: hidden;
+}
+.popover-content .a-item{
+    display:inline-block;
+    width:100%;
+    float: left;
+}
 .popover-event li {
     padding: 5px 10px;
 }

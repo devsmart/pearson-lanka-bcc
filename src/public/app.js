@@ -137,7 +137,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                 'pearson.com_3polpfv3rqttj2tbcqo80km5eg@group.calendar.google.com',
                 'pearson.com_h2mll5g9ndpt6qebq8cp5lj0d8@group.calendar.google.com',
                 'pearson.com_pplpntouk3nqp7mn2hhjaohla0@group.calendar.google.com',
-				'pearson.com_h32e69c9mhc6d0m2u35pelpmu0@group.calendar.google.com'
+                'pearson.com_h32e69c9mhc6d0m2u35pelpmu0@group.calendar.google.com'
             ];
 
             var apiData = [];
@@ -153,17 +153,29 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
             var fillData = function () {
 
-                apiData = apiData.sort(function (a, b) {
-                    if (a.summary.toLowerCase() < b.summary.toLowerCase()) {
-                        return -1;
-                    }
-                    else if (a.summary.toLowerCase() > b.summary.toLowerCase()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                });
+
+
                 if (calIds.length === apiData.length) {
+                    var genCal = null;
+                    for (var i = 0; i < apiData.length; i++) {
+                        if(apiData[i].summary.toLowerCase() =='general'){
+                            genCal =  apiData[i];
+                            apiData.splice(i,1);
+                            break;
+                        }
+                    }
+                    apiData = apiData.sort(function (a, b) {
+                        if (a.summary.toLowerCase() < b.summary.toLowerCase()) {
+                            return -1;
+                        }
+                        else if (a.summary.toLowerCase() > b.summary.toLowerCase()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    });
+                    apiData.push(genCal);
+
                     for (var i = 0; i < 13; i++) {
                         var monthData = {
                             name: $scope.MonthNames[i],
