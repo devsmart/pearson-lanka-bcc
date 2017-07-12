@@ -6,7 +6,7 @@
 var myCalender = angular.module('myCalender', ['mgcrea.ngStrap']);
 
 myCalender.controller('homeController', function ($scope, $timeout, $q, $popover) {
-        $scope.MonthNames = ['Dept.', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $scope.MonthNames = ['Area', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.data = [];
         $scope.showContent = false;
 

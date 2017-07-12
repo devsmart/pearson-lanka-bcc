@@ -45,6 +45,14 @@ header nav .container-fluid{
     border-right: 1px solid #E0E0E0;
     border-bottom: 1px solid #E0E0E0;
     padding-top: 4px;
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.card-outer .area-name{
+    display: table-cell;
+    vertical-align: middle;
 }
 .d0 .card-outer{
     border-left: 1px solid #E0E0E0;
@@ -125,7 +133,7 @@ header nav .container-fluid{
 
 .sameline .inner-item:hover{
     background-color:#006A8D;
-    border: 1px solid #FFFFF;
+    border: 1px solid #FFF;
 }
 
 .popover-event,
@@ -257,13 +265,17 @@ header nav .container-fluid{
 .popover-content .a-outer{
     overflow-y: auto;
     max-height: 50px;
-    /* float: left; */
+    float: left;
     overflow-x: hidden;
 }
 .popover-content .a-item{
     display:inline-block;
     width:100%;
     float: left;
+}
+.popover-content .a-head{
+    width:100%;
+    float:left;
 }
 .popover-event li {
     padding: 5px 10px;

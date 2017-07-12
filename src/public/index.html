@@ -57,7 +57,7 @@
                         <div class="heading">{{m.name}}</div>
                     </li>
                     <li class="card-outer" ng-repeat="c in m.calenders">
-                        <div ng-if="c.showName" title="{{c.title}}">{{c.showName}}</div>
+                        <div ng-if="c.showName" title="{{c.title}}" class="area-name">{{c.showName}}</div>
                         <ul class="items" id="{{c.id}}">
                             <li class="sameline"  ng-if="c.events.length < 5" ng-repeat="e in c.events" ng-style="e.widthStyle">
                                 <div title="{{e.name}}" class="item" ng-class="[e.extraClass, e.colorId]"
