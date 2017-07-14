@@ -263,10 +263,11 @@ header nav .container-fluid{
 }
 
 .popover-content .a-outer{
-    overflow-y: auto;
+    overflow-y: scroll;
     max-height: 50px;
     float: left;
     overflow-x: hidden;
+    width: 100%;
 }
 .popover-content .a-item{
     display:inline-block;
