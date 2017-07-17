@@ -282,6 +282,9 @@ header nav .container-fluid{
     padding: 5px 10px;
 }
 
+.popover-cal .btns{
+    padding-left: 8px;
+}
 .color-default,
 .color-1 {
     background-color: #007FA9;

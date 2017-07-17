@@ -17,6 +17,7 @@
                     </li>
                     <li ng-if="content.start"><strong>Start : </strong> {{content.start | date : "medium"}}</li>
                     <li ng-if="content.end"><strong>End : </strong> {{content.end | date : "medium"}}</li>
+                    <li ng-if="content.organizer"><strong>Organizer : </strong> {{content.organizer.displayName || content.organizer.email}}</li>
                     <li ng-if="content.attachments.length > 0">
                         <div class="links">
                             <div class="a-head"><strong>Links</strong></div>

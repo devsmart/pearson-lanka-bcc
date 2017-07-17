@@ -69,7 +69,8 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                             end: undefined,
                             location: '',
                             description: '',
-                            widthStyle: {'width': '10%'}
+                            widthStyle: {'width': '10%'},
+                            organizer: undefined
                         });
 
                 } else {
@@ -111,8 +112,8 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
                                 extraClass: extraClasses,
                                 colorId: colorId,
                                 id: event.id,
-                                attachments: att
-
+                                attachments: att,
+                                organizer: event.hasOwnProperty('organizer') ? event.organizer : undefined
                             });
                     }
                 }
@@ -154,13 +155,12 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
             var fillData = function () {
 
 
-
                 if (calIds.length === apiData.length) {
                     var genCal = null;
                     for (var i = 0; i < apiData.length; i++) {
-                        if(apiData[i].summary.toLowerCase() =='general'){
-                            genCal =  apiData[i];
-                            apiData.splice(i,1);
+                        if (apiData[i].summary.toLowerCase() == 'general') {
+                            genCal = apiData[i];
+                            apiData.splice(i, 1);
                             break;
                         }
                     }
