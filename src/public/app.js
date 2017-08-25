@@ -5,11 +5,18 @@
 
 var myCalender = angular.module('myCalender', ['mgcrea.ngStrap']);
 
-myCalender.controller('homeController', function ($scope, $timeout, $q, $popover) {
+myCalender.controller('homeController', function ($scope, $timeout, $q, $popover, $http) {
         $scope.MonthNames = ['Area', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.data = [];
         $scope.showContent = false;
-
+        $scope.apiUrl = '/events.php';
+        $scope.changes = [];
+        $scope.serverData = [];
+        $scope.alert = {
+            show: false,
+            message: '',
+            class: 'alert-success'
+        };
         // Client ID and API key from the Developer Console
         var CLIENT_ID = '502581757627-t6g279js6onoiaarmqqq3mfhl5ndi9mi.apps.googleusercontent.com';
 
@@ -26,13 +33,15 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
         function getEventsForCalender(calenderId) {
             return $q(function (resolve, reject) {
                 var today = new Date();
-                var dt = new Date(today.getFullYear(), 0, 1, 0, 0, 0, 0);
+                var dt = new Date(Date.UTC(today.getFullYear(), 0, 1, 0, 0, 0, 0));
+                var dtEnd = new Date(Date.UTC(today.getFullYear(), 11, 31, 23, 59, 59, 0));
                 gapi.client.calendar.events.list({
                     'calendarId': calenderId,
                     'timeMin': dt.toISOString(),
+                    'timeMax': dtEnd.toISOString(),
                     'showDeleted': false,
                     'singleEvents': true,
-                    'maxResults': 999999,
+                    /*   'maxResults': 999999,*/
                     'orderBy': 'startTime'
                 }).then(function (response) {
                     //var events = response.result.items;
@@ -157,6 +166,7 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
 
                 if (calIds.length === apiData.length) {
+                    showChanges(apiData);
                     var genCal = null;
                     for (var i = 0; i < apiData.length; i++) {
                         if (apiData[i].summary.toLowerCase() == 'general') {
@@ -216,6 +226,157 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
             fillData();
         }
 
+        /**
+         * Deep compare of two objects.
+         *
+         * Note that this does not detect cyclical objects as it should.
+         * Need to implement that when this is used in a more general case. It's currently only used
+         * in a place that guarantees no cyclical structures.
+         *
+         * @param {*} x
+         * @param {*} y
+         * @return {Boolean} Whether the two objects are equivalent, that is,
+         *         every property in x is equal to every property in y recursively. Primitives
+         *         must be strictly equal, that is "1" and 1, null an undefined and similar objects
+         *         are considered different
+         */
+        function equals(x, y) {
+            // If both x and y are null or undefined and exactly the same
+            if (x === y) {
+                return true;
+            }
+
+            // If they are not strictly equal, they both need to be Objects
+            if (!( x instanceof Object ) || !( y instanceof Object )) {
+                return false;
+            }
+
+            // They must have the exact same prototype chain, the closest we can do is
+            // test the constructor.
+            if (x.constructor !== y.constructor) {
+                return false;
+            }
+
+            for (var p in x) {
+                // Inherited properties were tested using x.constructor === y.constructor
+                if (x.hasOwnProperty(p)) {
+                    // Allows comparing x[ p ] and y[ p ] when set to undefined
+                    if (!y.hasOwnProperty(p)) {
+                        return false;
+                    }
+
+                    // If they have the same strict value or identity then they are equal
+                    if (x[p] === y[p]) {
+                        continue;
+                    }
+
+                    // Numbers, Strings, Functions, Booleans must be strictly equal
+                    if (typeof( x[p] ) !== "object") {
+                        return false;
+                    }
+
+                    // Objects and Arrays must be tested recursively
+                    if (!equals(x[p], y[p])) {
+                        return false;
+                    }
+                }
+            }
+
+            for (p in y) {
+                // allows x[ p ] to be set to undefined
+                if (y.hasOwnProperty(p) && !x.hasOwnProperty(p)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function showChanges(apiData) {
+            //get last saved
+            $http({
+                method: 'GET',
+                url: $scope.apiUrl + '?id_token=' + gapi.client.getToken().id_token
+            }).then(function successCallback(response) {
+                // this callback will be called asynchronously
+                // when the response is available
+                var sData = JSON.parse(response.data);
+                $scope.serverData = sData;
+                var latestData = apiData.map(function (a) {
+                    return {
+                        etag: a.etag,
+                        summary: a.summary,
+                        items: a.items.map(function (f) {
+                                return {
+                                    id: f.id,
+                                    start: f.start,
+                                    end: f.end,
+                                    summary: f.summary
+                                }
+                            }
+                        )
+                    }
+                });
+                $scope.latestData = latestData;
+                for (var i = 0; i < apiData.length; i++) {
+                    if (!equals(sData[i], latestData[i])) {
+                        //added items
+                        var A = sData[i].items.map(function (a) {
+                            return a.id
+                        });
+                        var B = latestData[i].items.map(function (a) {
+                            return a.id
+                        });
+
+                        var removed = A.filter(function (x) {
+                            return B.indexOf(x) < 0
+                        });
+                        var added = B.filter(function (x) {
+                            return A.indexOf(x) < 0
+                        });
+
+                        var changed = [];
+                        //changed
+                        for (var j = 0; j < latestData[i].items.length; j++) {
+                            var a = latestData[i].items[j];
+                            if (added.includes(a.id)) {
+                                continue; //new item
+                            }
+                            var oldItem = sData[i].items.find(function (x) {
+                                return x.id === a.id
+                            });
+                            if (a.summary !== oldItem.summary || !equals(a.start, oldItem.start) || !equals(a.end, oldItem.end)) {
+                                changed.push({
+                                    pre: oldItem,
+                                    new: a
+                                })
+                            }
+                        }
+                        if (removed.length > 0 || added.length > 0 || changed.length > 0) {
+                            $scope.changes.push({
+                                etag: sData[i].etag,
+                                show: false,
+                                summary: sData[i].summary,
+                                added: latestData[i].items.filter(function (x) {
+                                    return added.includes(x.id)
+                                }),
+                                removed: sData[i].items.filter(function (x) {
+                                    return removed.includes(x.id)
+                                }),
+                                changed: changed
+                            });
+                        }
+                    }
+                }
+                if ($scope.changes.length > 0) {
+                    $scope.changes[0].show = true;
+                }
+
+            }, function errorCallback(response) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+            //
+        }
 
         /**
          *  Called when the signed in status changes, to update the UI
@@ -282,9 +443,6 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
         $scope.myPopover = {};
 
         $scope.calenderItem_click = function ($event, calender, event) {
-
-            console.log(calender);
-            console.log(event);
             if (event === null) {
                 var p = angular.element($event.currentTarget.parentNode.parentNode);
 
@@ -332,12 +490,71 @@ myCalender.controller('homeController', function ($scope, $timeout, $q, $popover
 
         };
 
+        function showAlert(message, className) {
+            $scope.alert.message = message;
+            $scope.alert.show = true;
+            $scope.alert.class = className;
+            $timeout(function () {
+                $scope.alert.show = false
+            }, 5000);
+        }
+
+        $scope.btnAccept_click = function (cal) {
+            console.log(cal);
+            //$scope.latestData
+            var changed = $scope.latestData.find(function (a) {
+                return a.etag = cal.etag;
+            });
+            for (var j = 0; j < $scope.serverData.length; j++) {
+                if ($scope.serverData[j].etag == cal.etag) {
+                    $scope.serverData[j].items = changed.items;
+                    break;
+                }
+            }
+            //save changes
+            $http({
+                method: 'POST',
+                url: $scope.apiUrl + '?id_token=' + gapi.client.getToken().id_token,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: $scope.serverData
+            }).then(
+                function successCallback(response) {
+                    showAlert('Accept saved successfully.', 'alert-success');
+                    for (var j = 0; j < $scope.changes.length; j++) {
+                        if ($scope.changes[j].etag == cal.etag) {
+                            $scope.changes.splice(j, 1);
+                            break;
+                        }
+                    }
+                },
+                function errorCallback(response) {
+                    showAlert('Error occurred while saving.', 'alert-danger');
+                    console.log(response);
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+        };
+
+
         $scope.init();
 
     }
 )
 ;
-
+myCalender.filter('dateformat', function ($filter) {
+    return function (input) {
+        if (input.hasOwnProperty('date')) {
+            var date = new Date(input.date);
+            return ($filter('date')(date, 'MMM d, y') );
+        }
+        if (input.hasOwnProperty('dateTime')) {
+            var date = new Date(input.dateTime);
+            return ($filter('date')(date, 'medium') );
+        }
+    }
+});
 myCalender.directive('moreButton', function () {
     return {
         restrict: 'E',

@@ -31,7 +31,8 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-show="showContent"><a href="#" ng-click="btnSignOut_click()"><span>Sign Out </span><i class="fa fa-power-off fa-icon" aria-hidden="true"></i></a></li>
+                        <li ng-show="showContent"><a href="#" ng-click="btnSignOut_click()"><span>Sign Out </span><i
+                                class="fa fa-power-off fa-icon" aria-hidden="true"></i></a></li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
@@ -39,7 +40,7 @@
             <!-- /.container-fluid -->
         </nav>
     </header>
-    <div class="outer" >
+    <div class="outer">
         <div class="myButtons">
             <!--Add buttons to initiate auth sequence and sign out-->
             <div class="in">
@@ -57,9 +58,10 @@
                         <div class="heading">{{::m.name}}</div>
                     </li>
                     <li class="card-outer" ng-repeat="c in ::m.calenders">
-                        <div ng-if="::c.showName" title="{{::c.title}}" class="area-name" >{{::c.showName}}</div>
+                        <div ng-if="::c.showName" title="{{::c.title}}" class="area-name">{{::c.showName}}</div>
                         <ul class="items" id="{{::c.id}}">
-                            <li class="sameline"  ng-if="c.events.length < 5" ng-repeat="e in ::c.events" ng-style="::e.widthStyle">
+                            <li class="sameline" ng-if="c.events.length < 5" ng-repeat="e in ::c.events"
+                                ng-style="::e.widthStyle">
                                 <div title="{{::e.name}}" class="item" ng-class="[e.extraClass, e.colorId]"
                                      ng-click="calenderItem_click($event,c, e)"></div>
                             </li>
@@ -79,6 +81,72 @@
                 </ul>
             </div>
             <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="content-outer" ng-if="changes.length > 0">
+            <div class="alert " ng-show="alert.show" ng-class="alert.class">
+                {{alert.message}}
+            </div>
+            <h2>Changes</h2>
+            <ul class="list">
+                <li ng-repeat="a in changes">
+                    <div>
+                        <button class="btn btn-success" ng-click="a.show = !a.show">{{a.show ? 'Hide': 'Show'}}</button>
+                        <h3 ng-bind="a.summary"></h3>
+
+                        <div ng-show="a.show">
+                            <div class="col-md-11">
+                                <div ng-if="a.added.length > 0">
+                                    <h4>New Events</h4>
+                                    <ul class="changes list">
+                                        <li ng-repeat="n in a.added">
+                                            <div class="line">
+                                                <span>{{n.start | dateformat }}</span> -
+                                                <span>{{n.end | dateformat }}</span> :
+                                                <span ng-bind="n.summary"></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div ng-if="a.removed.length > 0">
+                                    <h4>Removed Events</h4>
+                                    <ul class="changes list">
+                                        <li ng-repeat="n in a.removed">
+                                            <div class="line">
+                                                <span>{{n.start | dateformat }}</span> -
+                                                <span>{{n.end | dateformat }}</span> :
+                                                <span ng-bind="n.summary"></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div ng-if="a.changed.length > 0">
+                                    <h4>Changed Events</h4>
+                                    <ul class="changes list">
+                                        <li ng-repeat="n in a.changed">
+                                            <div class="line">
+                                                <span>{{n.pre.start | dateformat }}</span> -
+                                                <span>{{n.pre.end | dateformat }}</span> :
+                                                <span ng-bind="n.pre.summary"></span>
+                                            </div>
+                                            <div class="line">
+                                                <span>{{n.new.start | dateformat }}</span> -
+                                                <span>{{n.new.end | dateformat }}</span> :
+                                                <span ng-bind="n.new.summary"></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-primary" ng-click="btnAccept_click(a)">Accept</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
         </div>
     </div>
 

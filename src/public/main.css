@@ -360,3 +360,41 @@ header nav .container-fluid{
     white-space: nowrap;
     overflow: hidden;
 }
+
+
+.list{
+    margin:0;
+    padding:0 0 0 20px;
+}
+
+.list li{
+    list-style:none;
+}
+.list button,
+.list h3{
+    display:inline-block;
+}
+
+.list .line{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    padding:2px
+}
+
+.changes li:nth-child(odd) { background: rgba(238, 238, 238, 0.28); }
+.changes li:nth-child(even) { background: #e9e9e9; }
+
+h2{
+    font-size:18px
+}
+
+h3{
+    font-size:16px
+}
+
+h4{
+    font-size:14px;
+    font-weight:bold;
+}
